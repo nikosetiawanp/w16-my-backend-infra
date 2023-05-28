@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  database:
+    image: postgres:alpine
+    container_name: my-backend-infra-database
+    hostname: database
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    restart: always
+  app:
+    image: us-west1-docker.pkg.dev/niko-backend-infra/docker/my-backend-infra
+    container_name: my-backend-infra-app
+    build: .
+    ports:
+      - 80:3000
+      - 443:3000
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      - database
+    restart: always
+volumes:
+  postgres:
